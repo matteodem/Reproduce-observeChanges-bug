@@ -33,17 +33,13 @@ if (Meteor.isServer) {
       });
 
       for (i = 0; i < 20; i += 1) {
-          // is being logged
           SomeCollection.insert({ 'foo' : 'bar' + ' ' + i });
       }
 
-      // is being logged
       SomeCollection.insert(SomeCollection.findOne()._id);
 
-      // is not being logged
       SomeCollection.remove({});
 
-      // is empty though
       console.log(SomeCollection.find().fetch());
   });
 }
