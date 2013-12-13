@@ -1,4 +1,5 @@
 SomeCollection = new Meteor.Collection('some');
+FakeESIndex = new Meteor.Collection('index');
 
 if (Meteor.isClient) {
   Template.hello.greeting = function () {
@@ -21,14 +22,10 @@ if (Meteor.isServer) {
       // set up observe changes
       SomeCollection.find().observeChanges({
           'removed' : function (id) {
-              console.log('removed a doc!');
-              console.log(id);
-              console.log("--------\n\n");
+              FakeESIndex.remove(id);
           },
-          'added' : function (id) {
-              console.log('added a doc!');
-              console.log(id);
-              console.log("--------\n\n");
+          'added' : function (id, doc) {
+              FakeESIndex.insert(id, doc);
           }
       });
 
@@ -40,6 +37,8 @@ if (Meteor.isServer) {
 
       SomeCollection.remove({});
 
+      // The real replication of both collections
       console.log(SomeCollection.find().fetch());
+      console.log(FakeESIndex.find().fetch());
   });
 }
